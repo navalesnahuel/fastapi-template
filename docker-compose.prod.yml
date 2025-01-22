@@ -1,0 +1,11 @@
+services:
+  backend:
+    container_name: backend 
+    image: backend
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    build:
+      context: .
+      dockerfile: Dockerfile.prod

@@ -1,0 +1,39 @@
+services:
+  app_db:
+    container_name: app_db
+    hostname: app_db
+    image: library/postgres:16.3
+    environment:
+      - POSTGRES_USER=app
+      - POSTGRES_PASSWORD=app
+      - POSTGRES_DB=app
+    volumes:
+      - app_db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    container_name: redis
+    image: bitnami/redis:7.4.1
+    restart: always
+    environment:
+      - REDIS_PASSWORD=redis
+    ports:
+      - "6379:6379"
+    volumes:  
+      - redis_data:/data
+
+  adminer:
+    image: adminer
+    restart: always
+    depends_on:
+      - app_db 
+    ports:
+      - "8080:8080"
+      
+volumes:
+  redis_data:
+  app_db_data:
+    driver: "local"
+
+

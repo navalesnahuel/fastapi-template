@@ -1,0 +1,27 @@
+[project]
+name = "fastapi-template"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiofiles>=24.1.0",
+    "alembic>=1.14.0",
+    "colorlog>=6.9.0",
+    "fastapi[all,standard]>=0.115.6",
+    "gunicorn>=23.0.0",
+    "passlib[bcrypt]>=1.7.4",
+    "pillow>=11.1.0",
+    "prometheus-client>=0.21.1",
+    "psycopg2-binary>=2.9.10",
+    "pyjwt>=2.10.1",
+    "pytest>=8.3.4",
+    "python-json-logger>=3.2.1",
+    "ruff>=0.9.1",
+    "rust-just>=1.38.0",
+    "sentry-sdk[fastapi]>=2.19.2",
+    "sqladmin[full]>=0.20.1",
+    "sqlmodel>=0.0.22",
+    "tenacity>=9.0.0",
+    "wtforms>=3.1.2",
+]
