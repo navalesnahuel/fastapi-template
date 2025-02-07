@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     timeout: int = 120
     keepalive: int = 5
     log_level: str = "INFO"
-    log_config: str = "/app/logging_production.ini"
+    log_config: str = "./logging_production.ini"
 
     @property
     def computed_bind(self) -> str:

@@ -5,7 +5,6 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 
-from app.admin.admin import init_admin
 from app.config import app_configs, settings
 from app.routes import api_router
 
@@ -38,9 +37,7 @@ if settings.ENVIRONMENT.is_deployed:
         environment=settings.ENVIRONMENT,
     )
 
-init_admin(app)
 
-
-@app.get("/healthcheck", include_in_schema=False)
+@app.get("/", include_in_schema=False)
 async def healthcheck() -> dict[str, str]:
     return {"status": "ok"}

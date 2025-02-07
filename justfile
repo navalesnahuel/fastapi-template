@@ -17,13 +17,19 @@ history:
   uv run alembic history
 
 up:
-  docker-compose up -d
+  docker compose up -d
+
+up-prod:
+  docker compose -f docker-compose.prod.yml up --build -d
+
+traefik:
+  docker compose -f docker-compose.traefik.yml up --build -d
 
 kill *args:
-  docker-compose kill {{args}}
+  docker compose kill {{args}}
 
 build:
-  docker-compose build
+  docker compose build
 
 ps:
-  docker-compose ps
+  docker compose ps
