@@ -10,11 +10,9 @@ services:
       - LETSENCRYPT_HOST=nahuelapi.duckdns.org
       - LETSENCRYPT_EMAIL=navalesnahuel@gmail.com
     env_file:
-      - .env
+       - .env
     expose:
       - "8000"
-    depends_on:
-      - db
     entrypoint: ["entrypoints/gunicorn.sh"]
     networks:
       - default
@@ -49,33 +47,9 @@ services:
     networks:
       - default
 
-  db:
-    container_name: db
-    hostname: db
-    image: library/postgres:16.3
-    environment:
-      - POSTGRES_USER=app
-      - POSTGRES_PASSWORD=app
-      - POSTGRES_DB=app
-    volumes:
-      - app_db_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
-  adminer:
-    image: adminer
-    container_name: adminer
-    restart: always
-    depends_on:
-      - db 
-    ports:
-      - "7777:7777"
-
 volumes:
   vhost.d:
   html:
-  app_db_data:
-    driver: "local"
 
 networks:
   default:

@@ -6,16 +6,16 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.constants import Environment
 
+# class CustomBaseSettings(BaseSettings):
+#
+#     model_config = SettingsConfigDict(
+#         env_file=".env", env_file_encoding="utf-8", extra="ignore"
+#     )
+#
 
-class CustomBaseSettings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", extra="ignore"
-    )
 
-
-class Config(CustomBaseSettings):
-    DATABASE_PRODUCTION: PostgresDsn
-    DATABASE_DEVELOPMENT: PostgresDsn
+class Config(BaseSettings):
+    DATABASE_URL: PostgresDsn
     DATABASE_POOL_SIZE: int = 16
     DATABASE_POOL_TTL: int = 60 * 20  # 20 minutes
     DATABASE_POOL_PRE_PING: bool = True
@@ -37,17 +37,6 @@ class Config(CustomBaseSettings):
     FIRST_SUPERUSER_PASSWORD: str
 
     APP_VERSION: str = "0.1"
-
-    @property
-    def DATABASE_URL(self) -> PostgresDsn:
-        """
-        Returns the correct database URL based on the current environment.
-        """
-        return (
-            self.DATABASE_PRODUCTION
-            if self.ENVIRONMENT.is_deployed
-            else self.DATABASE_DEVELOPMENT
-        )
 
     @model_validator(mode="after")
     def validate_sentry_non_local(self) -> "Config":
