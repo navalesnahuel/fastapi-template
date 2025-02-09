@@ -4,7 +4,13 @@ from sqlmodel import Session
 
 from ..database import engine, init_db
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(message)s",  # Simplified format
+    datefmt="%Y-%m-%d %H:%M:%S",  # Custom date format
+    level=logging.INFO,  # Set log level
+)
+
+
 logger = logging.getLogger(__name__)
 
 

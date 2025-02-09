@@ -16,11 +16,11 @@ downgrade *args:
 history:
   uv run alembic history
 
-development:
-  docker compose up -d --build -p dev
+dev:
+  docker compose up -d --build 
 
-production:
-  docker compose -f docker-compose.prod.yml up -d --build -p prod
+prod:
+  docker compose -f docker-compose.prod.yml up -d --build 
 
 kill *args:
   docker compose kill {{args}}

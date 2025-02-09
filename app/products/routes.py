@@ -45,9 +45,11 @@ async def create_product(session: SessionDep, product: CreateProduct):
     """Create a new product."""
     db_product = Product.model_validate(product)
 
-    if session.exec(
+    existing_product = session.exec(
         select(Product).where(Product.product_name == db_product.product_name)
-    ):
+    ).first()
+
+    if existing_product:
         raise HTTPException(status_code=400, detail="Product already created")
 
     session.add(db_product)

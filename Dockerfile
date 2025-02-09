@@ -16,10 +16,13 @@ ENV PYTHONUNBUFFERED=1 \
 
 RUN mkdir -p /app/static/products
 
+RUN apt-get update && apt-get install -y curl
+
 # development
 FROM base AS development
 
-COPY ./pyproject.toml ./uv.lock ./alembic.ini /app/
+COPY ./pyproject.toml ./uv.lock ./alembic.ini ./logging.ini /app/
+COPY ./entrypoints/uvicorn.sh /app/entrypoints/uvicorn.sh
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync
 

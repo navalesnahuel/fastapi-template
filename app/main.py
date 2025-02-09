@@ -36,8 +36,3 @@ if settings.ENVIRONMENT.is_deployed:
         dsn=settings.SENTRY_DSN,
         environment=settings.ENVIRONMENT,
     )
-
-
-@app.get("/", include_in_schema=False)
-async def healthcheck() -> dict[str, str]:
-    return {"status": "ok"}

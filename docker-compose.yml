@@ -1,3 +1,4 @@
+name: development-back
 services:
   fastapi-dev:
     build: 
@@ -6,9 +7,9 @@ services:
       target: development
     container_name: fastapi-dev 
     volumes:
-      - .:/app 
-    env_file:
-      - .env.dev
+      - ./app/:/app/app
+      - ./alembic:/app/alembic
+      - .env.dev:/app/.env
     ports:
       - "8001:8000"
     depends_on:

@@ -1,7 +1,6 @@
 #! /usr/bin/env bash
 
 set -e
-set -x
 
 # Let the DB start
 uv run python -m app.scripts.backend_pre_start

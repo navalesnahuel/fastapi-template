@@ -6,15 +6,15 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.constants import Environment
 
-# class CustomBaseSettings(BaseSettings):
-#
-#     model_config = SettingsConfigDict(
-#         env_file=".env", env_file_encoding="utf-8", extra="ignore"
-#     )
-#
+
+class CustomBaseSettings(BaseSettings):
+
+    model_config = SettingsConfigDict(
+        env_file=".env", env_file_encoding="utf-8", extra="ignore"
+    )
 
 
-class Config(BaseSettings):
+class Config(CustomBaseSettings):
     DATABASE_URL: PostgresDsn
     DATABASE_POOL_SIZE: int = 16
     DATABASE_POOL_TTL: int = 60 * 20  # 20 minutes
