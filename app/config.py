@@ -45,6 +45,20 @@ class Config(CustomBaseSettings):
 
         return self
 
+    @property
+    def first_superuser(self):
+        # Override FIRST_SUPERUSER for testing environment
+        if self.ENVIRONMENT == Environment.TESTING:
+            return "test@test.com"  # Default superuser for testing
+        return self.FIRST_SUPERUSER
+
+    @property
+    def first_superuser_password(self):
+        # Override FIRST_SUPERUSER_PASSWORD for testing environment
+        if self.ENVIRONMENT == Environment.TESTING:
+            return "testpassword"  # Default password for testing
+        return self.FIRST_SUPERUSER_PASSWORD
+
 
 settings = Config()  # type: ignore
 
