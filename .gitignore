@@ -16,5 +16,6 @@ static/
 .env
 .env.dev
 
+
 # Virtual environments
 .venv
