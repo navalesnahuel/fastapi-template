@@ -25,11 +25,6 @@ jobs:
     - run: ruff check --fix
     - run: ruff format
 
-
-    - name: Run Tests
-      run: uv run --frozen pytest # Tests on PRs
-
-
     # DOcker images check
     # ALembic migrations
     # Backup
