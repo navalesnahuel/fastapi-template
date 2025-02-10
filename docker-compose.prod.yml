@@ -2,10 +2,7 @@ name: production-back
 
 services:
   fastapi:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: production
+    image: navalesnahuel/myapp:production
     container_name: fastapi
     environment:
       - VIRTUAL_HOST=nahuelapi.duckdns.org

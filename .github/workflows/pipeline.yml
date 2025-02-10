@@ -1,7 +1,10 @@
-name: Deployment Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
@@ -12,9 +15,9 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_USER: test_user
-          POSTGRES_PASSWORD: test_password
-          POSTGRES_DB: test_db
+          POSTGRES_USER: ${{ SECRETS.TESTDB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.TESTDB_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.TESTDB_DB }}
         ports:
           - 5432:5432
         options: >-
@@ -39,13 +42,13 @@ jobs:
     - name: Migrate DB
       run: uv run bash scripts/prestart.sh
       env:
-        DATABASE_URL: postgresql://test_user:test_password@localhost:5432/test_db
+        DATABASE_URL: ${{ secrets.DATABASE_TEST_URL }}
         ENVIRONMENT: TESTING
 
     - name: Run Tests
       run: uv run --frozen pytest # Tests on PRs
       env:
-        DATABASE_URL: postgresql://test_user:test_password@localhost:5432/test_db
+        DATABASE_URL: ${{ secrets.DATABASE_TEST_URL }}
         ENVIRONMENT: TESTING
 
   lint:
@@ -67,13 +70,16 @@ jobs:
     - run: ruff check --fix
     - run: ruff format
 
-  build-and-push:
+  build:
     needs: [lint, test]  
     runs-on: ubuntu-20.04
+    if: github.event_name == 'push'
     steps:
 
     - name: Cancel Previous Redundant Builds
       uses: styfle/cancel-workflow-action@0.11.0
+      with:
+        access_token: ${{ github.token }}
 
     - name: Checkout
       uses: actions/checkout@v4.2.2
@@ -86,12 +92,29 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+
     - name: Build and Push Docker Image
       run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/myapp:latest .
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/myapp:latest
-    # DOcker images check
-    # ALembic migrations
-    # Backup
-    # Push images to docker hub
-    # Deploy to environment
+        docker buildx create --use
+        docker buildx build --platform linux/amd64,linux/arm64 \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/myapp:latest \
+          --push .
+
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Pull Latest Docker Image on Server
+        run: |
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            'cd ${{ secrets.CWD }} && docker compose -f docker-compose.prod.yml pull && docker compose up -d --remove-orphans'
+
+      - name: Health Check
+        run: |
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            'curl -f http://localhost:8000/health || exit 1'
+
+      - name: Clean up unused Docker images
+        run: |
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            'docker system prune -af'
