@@ -1,6 +1,9 @@
 name: Test Backend
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   test-backend:
@@ -32,17 +35,20 @@ jobs:
       with:
         enable-cache: true
 
+
     - name: Ensure static directory exists
       run: mkdir -p static
 
     - name: Migrate DB
       run: uv run bash scripts/prestart.sh
       env:
+        DATABASE_URL: postgresql://test_user:test_password@localhost:5432/test_db
         ENVIRONMENT: TESTING
 
     - name: Run Tests
       run: uv run --frozen pytest # Tests on PRs
       env:
+        DATABASE_URL: postgresql://test_user:test_password@localhost:5432/test_db
         ENVIRONMENT: TESTING
 
 

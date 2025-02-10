@@ -39,11 +39,13 @@ jobs:
     - name: Migrate DB
       run: uv run bash scripts/prestart.sh
       env:
+        DATABASE_URL: postgresql://test_user:test_password@localhost:5432/test_db
         ENVIRONMENT: TESTING
 
     - name: Run Tests
       run: uv run --frozen pytest # Tests on PRs
       env:
+        DATABASE_URL: postgresql://test_user:test_password@localhost:5432/test_db
         ENVIRONMENT: TESTING
 
   lint:
