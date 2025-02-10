@@ -1,2 +1,2 @@
-from app.auth.models import *
-from app.products.models import *
+from app.auth.models import *  # noqa: F403
+from app.products.models import *  # noqa: F403
