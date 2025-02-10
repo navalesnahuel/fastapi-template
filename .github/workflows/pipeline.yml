@@ -6,72 +6,19 @@ on:
       - main
 
 jobs:
-  test:
-    runs-on: ubuntu-20.04
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: test_user
-          POSTGRES_PASSWORD: test_password
-          POSTGRES_DB: test_db
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4.2.2
-      with:
-        fetch-depth: 0
-
-    - name: Install uv
-      uses: astral-sh/setup-uv@v5
-      with:
-        enable-cache: true
-
-    - name: Ensure static directory exists
-      run: mkdir -p static
-
-    - name: Migrate DB
-      run: uv run bash scripts/prestart.sh
-      env:
-        ENVIRONMENT: TESTING
-
-    - name: Run Tests
-      run: uv run --frozen pytest # Tests on PRs
-      env:
-        ENVIRONMENT: TESTING
-
   lint:
-    runs-on: ubuntu-20.04
-    steps:
+    uses: ./.github/workflows/lint.yml  # Reuses your existing lint workflow
 
-    - name: Checkout
-      uses: actions/checkout@v4.2.2
-      with:
-        fetch-depth: 0
-
-    - name: Install uv
-      uses: astral-sh/setup-uv@v5
-      with:
-        enable-cache: true
-
-    - name: Linter
-      uses: astral-sh/ruff-action@v3
-    - run: ruff check --fix
-    - run: ruff format
+  test:
+    uses: ./.github/workflows/tests.yml  # Reuses your existing test workflow
 
   build-and-push:
-    needs: [lint, test]  
+    needs: [lint, test]  # Only runs if linting and tests pass
     runs-on: ubuntu-20.04
     steps:
 
     - name: Cancel Previous Redundant Builds
-      uses: styfle/cancel-workflow-action
+      uses: styfle/cancel-workflow-action@0.11.0
 
     - name: Checkout
       uses: actions/checkout@v4.2.2
