@@ -6,24 +6,35 @@ on:
       - main
 
 jobs:
-  deploy:
+  lint:
+    uses: ./.github/workflows/lint.yml  # Reuses your existing lint workflow
+
+  test:
+    uses: ./.github/workflows/tests.yml  # Reuses your existing test workflow
+
+  build-and-push:
+    needs: [lint, test]  
     runs-on: ubuntu-20.04
     steps:
+
+    - name: Cancel Previous Redundant Builds
+      uses: styfle/cancel-workflow-action
 
     - name: Checkout
       uses: actions/checkout@v4.2.2
       with:
         fetch-depth: 0
 
-    - name: Install uv
-      uses: astral-sh/setup-uv@v5
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
       with:
-        enable-cache: true
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Linter
-      uses: astral-sh/ruff-action@v3
-    - run: ruff check --fix
-    - run: ruff format
+    - name: Build and Push Docker Image
+      run: |
+        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/myapp:latest .
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/myapp:latest
 
     # DOcker images check
     # ALembic migrations
