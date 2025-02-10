@@ -39,6 +39,8 @@ jobs:
       run: uv run alembic upgrade head
       env:
         DATABASE_URL: postgresql://test_user:test_password@localhost:5432/test_db
+        FIRST_SUPERUSER: test@test.com
+        FIRST_SUPERUSER_PASSWORD: testpassword
 
     - name: Run Tests
       run: uv run --frozen pytest # Tests on PRs
