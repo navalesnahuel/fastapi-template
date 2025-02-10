@@ -33,8 +33,8 @@ class Config(CustomBaseSettings):
     # 8 days
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
 
-    FIRST_SUPERUSER: str
-    FIRST_SUPERUSER_PASSWORD: str
+    FIRST_SUPERUSER: str = "test@test.com"
+    FIRST_SUPERUSER_PASSWORD: str = "testpassword"
 
     APP_VERSION: str = "0.1"
 
@@ -46,18 +46,11 @@ class Config(CustomBaseSettings):
         return self
 
     @property
-    def first_superuser(self):
-        # Override FIRST_SUPERUSER for testing environment
+    def secret_key(self):
+        # Override SECRET_KEY for testing environment
         if self.ENVIRONMENT == Environment.TESTING:
-            return "test@test.com"  # Default superuser for testing
-        return self.FIRST_SUPERUSER
-
-    @property
-    def first_superuser_password(self):
-        # Override FIRST_SUPERUSER_PASSWORD for testing environment
-        if self.ENVIRONMENT == Environment.TESTING:
-            return "testpassword"  # Default password for testing
-        return self.FIRST_SUPERUSER_PASSWORD
+            return "testsecretkey"  # Simple secret for testing purposes
+        return self.SECRET_KEY
 
 
 settings = Config()  # type: ignore
