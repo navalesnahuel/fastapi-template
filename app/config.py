@@ -52,6 +52,7 @@ app_configs: dict[str, Any] = {
     "title": "App API",
     "version": f"v{settings.APP_VERSION}",
 }
+
 app_configs["root_path"] = f"/api/v{settings.APP_VERSION}"
 
 if not settings.ENVIRONMENT.is_debug:

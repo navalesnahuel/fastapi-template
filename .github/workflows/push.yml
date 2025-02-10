@@ -1,0 +1,24 @@
+name: push
+
+on: 
+  push: 
+    branches:
+      - main
+
+jobs:
+  hello_world:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Echo the message
+        run: echo "Primer Workflow"
+
+      - name: Other thing 
+        run: echo "Primer Workflow"
+
+      - name: Fecha
+        run: date
+
+      - name: List
+        run: ls -l
+
+

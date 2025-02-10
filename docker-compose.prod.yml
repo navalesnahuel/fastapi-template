@@ -15,8 +15,6 @@ services:
        - .env
     expose:
       - "8000"
-    volumes:
-      - logs:/logs/  
     entrypoint: ["entrypoints/gunicorn.sh"]
     networks:
       - default
@@ -60,8 +58,6 @@ services:
 volumes:
   vhost.d:
   html:
-  logs:
-    driver: local
 
 networks:
   default:

@@ -1,0 +1,35 @@
+name: Deployment Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4.2.2
+      with:
+        fetch-depth: 0
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+
+    - name: Linter
+      uses: astral-sh/ruff-action@v3
+    - run: ruff check --fix
+    - run: ruff format
+
+    - name: Run Tests
+      run: uv run --frozen pytest # Tests on PRs
+
+
+    # DOcker images check
+    # ALembic migrations
+    # Backup
+    # Push images to docker hub
+    # Deploy to environment

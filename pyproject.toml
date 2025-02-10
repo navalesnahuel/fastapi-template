@@ -8,6 +8,7 @@ dependencies = [
     "aiofiles>=24.1.0",
     "alembic>=1.14.0",
     "colorlog>=6.9.0",
+    "fastapi-limiter>=0.1.6",
     "fastapi[all,standard]>=0.115.6",
     "gunicorn>=23.0.0",
     "passlib[bcrypt]>=1.7.4",
