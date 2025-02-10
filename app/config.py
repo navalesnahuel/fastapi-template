@@ -52,6 +52,13 @@ class Config(CustomBaseSettings):
             return "testsecretkey"  # Simple secret for testing purposes
         return self.SECRET_KEY
 
+    @property
+    def database_url(self):
+        # Override DATABASE_URL for testing environment
+        if self.ENVIRONMENT == Environment.TESTING:
+            return "postgresql://test_user:test_password@localhost:5432/test_db"
+        return self.DATABASE_URL
+
 
 settings = Config()  # type: ignore
 

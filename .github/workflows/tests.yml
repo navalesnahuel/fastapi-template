@@ -35,8 +35,12 @@ jobs:
       with:
         enable-cache: true
 
+
+    - name: Ensure static directory exists
+      run: mkdir -p static
+
     - name: Migrate DB
-      run: uv run alembic upgrade head
+      run: uv run bash scripts/prestart.sh
       env:
         DATABASE_URL: postgresql://test_user:test_password@localhost:5432/test_db
         ENVIRONMENT: TESTING
