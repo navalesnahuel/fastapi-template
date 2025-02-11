@@ -139,7 +139,7 @@ jobs:
 
     - name: Deploy to VM
       run: |
-        gcloud compute ssh --zone ${{ secrets.ZONE }} ${{ secrets.VM_INSTANCE }} --command="
+        gcloud compute scp --recurse --zone ${{ secrets.ZONE }} ./* ${{ secrets.VM_INSTANCE }}:~/app/
           cd ~/app && \
           docker-compose -f docker-compose.prod.yml down && \
           docker-compose -f docker-compose.prod.yml up -d
