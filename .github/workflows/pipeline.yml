@@ -134,8 +134,8 @@ jobs:
         # Wait a moment for key propagation
         sleep 10
         
-        # Add instance hostname to known hosts
-        gcloud compute ssh --zone ${{ env.ZONE }} ${{ env.VM_INSTANCE }} --command="echo" --quiet
+        # Add instance hostname to known hosts (fixed zone parameter)
+        gcloud compute ssh "${{ secrets.VM_INSTANCE}}" --zone="${{ secrets.ZONE }}" --command="echo"
 
     - name: Deploy to VM
       run: |
