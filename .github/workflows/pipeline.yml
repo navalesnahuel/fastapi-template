@@ -161,6 +161,6 @@ jobs:
         # Execute deployment commands on the VM
         gcloud compute ssh --zone ${{ secrets.ZONE }} ${{ secrets.VM_INSTANCE }} --command="
           cd ~/app && \
-          docker-compose -f docker-compose.prod.yml down && \
-          docker-compose -f docker-compose.prod.yml up -d
+          sudo docker-compose -f docker-compose.prod.yml down && \
+          sudo docker-compose -f docker-compose.prod.yml up -d
         "
