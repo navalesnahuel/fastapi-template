@@ -151,7 +151,6 @@ jobs:
           echo 'APP_VERSION=${{ secrets.APP_VERSION }}' > ~/app/.env && \
           echo 'ENVIRONMENT=${{ secrets.ENVIRONMENT }}' >> ~/app/.env && \
           echo 'DATABASE_URL=${{ secrets.DATABASE_URL }}' >> ~/app/.env && \
-          echo 'CORS_HEADERS=${{ secrets.CORS_HEADERS }}' >> ~/app/.env && \
           echo 'FIRST_SUPERUSER=${{ secrets.FIRST_SUPERUSER }}' >> ~/app/.env && \
           echo 'FIRST_SUPERUSER_PASSWORD=${{ secrets.FIRST_SUPERUSER_PASSWORD }}' >> ~/app/.env && \
           echo 'SENTRY_DSN=${{ secrets.SENTRY_DSN }}' >> ~/app/.env
