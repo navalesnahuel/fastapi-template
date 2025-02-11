@@ -118,23 +118,24 @@ jobs:
     - name: Configure SSH
       run: |
         # Create SSH directory
-        mkdir -p ~/.ssh/
+        mkdir -p /home/runner/.ssh/
         
         # Generate SSH key pair
-        ssh-keygen -t rsa -f ~/.ssh/google_compute_engine -N "" -C "github-actions"
+        ssh-keygen -t rsa -f /home/runner/.ssh/google_compute_engine -N "" -C "github-actions"
         
-        # Add key to GCP project metadata
+        # Read public key content and add to GCP
+        echo "$(whoami):$(cat /home/runner/.ssh/google_compute_engine.pub)" | \
         gcloud compute project-info add-metadata \
-          --metadata-from-file ssh-keys=~/.ssh/google_compute_engine.pub
+          --metadata ssh-keys="$(cat -)"
         
         # Set correct permissions
-        chmod 600 ~/.ssh/google_compute_engine
+        chmod 600 /home/runner/.ssh/google_compute_engine
         
         # Wait a moment for key propagation
         sleep 10
         
         # Add instance hostname to known hosts
-        gcloud compute ssh --zone ${{ secrets.ZONE }} ${{ secrets.VM_INSTANCE }} --command="echo" --quiet
+        gcloud compute ssh --zone ${{ env.ZONE }} ${{ env.VM_INSTANCE }} --command="echo" --quiet
 
     - name: Deploy to VM
       run: |
