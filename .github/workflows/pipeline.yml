@@ -100,3 +100,38 @@ jobs:
           -t ${{ secrets.DOCKERHUB_USERNAME }}/myapp:latest \
           --push .
 
+  deploy:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
+
+    - name: Configure SSH
+      run: |
+        # Create SSH directory
+        mkdir -p ~/.ssh/
+        # Write private key from secrets
+        echo "${{ secrets.GCP_SSH_PRIVATE_KEY }}" > ~/.ssh/google_compute_engine
+        chmod 600 ~/.ssh/google_compute_engine
+        # Write known hosts to prevent first-time connection prompt
+        gcloud compute ssh --zone ${{ secrets.ZONE }} ${{ secrets.VM_INSTANCE }} --command="echo" --quiet
+
+    - name: Deploy to VM
+      run: |
+        # Copy files to the VM
+        gcloud compute scp --recurse --zone ${{ secrets.ZONE }} ./* ${{ secrets.VM_INSTANCE }}:~/app/
+        
+        # Execute deployment commands on the VM
+        gcloud compute ssh --zone ${{ secrets.ZONE }} ${{ secrets.VM_INSTANCE }} --command="
+          cd ~/app && \
+          # Add your deployment commands here, for example:
+          docker-compose down && \
+          docker compose -f docker-compose.prod.yml up -d
+        "
