@@ -101,8 +101,7 @@ jobs:
           --push .
 
   deploy:
-    needs: [build]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -116,15 +115,25 @@ jobs:
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v2
 
-
     - name: Configure SSH
       run: |
         # Create SSH directory
         mkdir -p ~/.ssh/
-        # Write private key from secrets
-        echo "${{ secrets.GCP_SSH_PRIVATE_KEY }}" > ~/.ssh/google_compute_engine
+        
+        # Generate SSH key pair
+        ssh-keygen -t rsa -f ~/.ssh/google_compute_engine -N "" -C "github-actions"
+        
+        # Add key to GCP project metadata
+        gcloud compute project-info add-metadata \
+          --metadata-from-file ssh-keys=~/.ssh/google_compute_engine.pub
+        
+        # Set correct permissions
         chmod 600 ~/.ssh/google_compute_engine
-        # Write known hosts to prevent first-time connection prompt
+        
+        # Wait a moment for key propagation
+        sleep 10
+        
+        # Add instance hostname to known hosts
         gcloud compute ssh --zone ${{ secrets.ZONE }} ${{ secrets.VM_INSTANCE }} --command="echo" --quiet
 
     - name: Deploy to VM
