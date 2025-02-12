@@ -90,9 +90,19 @@ This project follows a modular approach, with separate directories for different
 Backend docs: [Development.md](./development.md).
 
 ## Deployment 
-Backend docs: [Development.md](./deployment.md).
+Backend docs: [Deployment.md](./deployment.md).
 
 ---
 
 ## License
 The Full Stack FastAPI Template is licensed under the terms of the MIT license.
+
+---
+
+## Acknowledgements
+This repository incorporates code and ideas from the following open-source projects:
+
+- [FastAPI Production Template](https://github.com/zhanymkanov/fastapi_production_template)
+- [Full Stack FastAPI Template](https://github.com/fastapi/full-stack-fastapi-template)
+
+A big thanks to the contributors of these repositories for providing foundational code that made this project possible.
