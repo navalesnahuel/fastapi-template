@@ -39,7 +39,7 @@ jobs:
     - name: Ensure static directory exists
       run: mkdir -p static
 
-    - name: Set environment variables
+    - name: Set environment variables & run tests
       run: |
         mkdir -p ~/app 
         echo 'APP_VERSION=${{ secrets.APP_VERSION }}' >> ~/app/.env
@@ -48,9 +48,7 @@ jobs:
         echo 'FIRST_SUPERUSER_PASSWORD=${{ secrets.FIRST_SUPERUSER_PASSWORD }}' >> ~/app/.env
         echo 'SENTRY_DSN=${{ secrets.SENTRY_DSN }}' >> ~/app/.env
         cd ~/app
-
-    - name: Run Tests
-      run: uv run --frozen pytest 
+        uv run --frozen pytest 
 
 
   lint:
