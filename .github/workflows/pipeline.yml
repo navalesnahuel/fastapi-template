@@ -41,11 +41,13 @@ jobs:
 
     - name: Set environment variables
       run: |
+        mkdir -p ~/app 
         echo 'APP_VERSION=${{ secrets.APP_VERSION }}' >> ~/app/.env
         echo 'DATABASE_URL=${{ secrets.DATABASE_URL }}' >> ~/app/.env
         echo 'FIRST_SUPERUSER=${{ secrets.FIRST_SUPERUSER }}' >> ~/app/.env
         echo 'FIRST_SUPERUSER_PASSWORD=${{ secrets.FIRST_SUPERUSER_PASSWORD }}' >> ~/app/.env
         echo 'SENTRY_DSN=${{ secrets.SENTRY_DSN }}' >> ~/app/.env
+        cd ~/app
 
     - name: Run Tests
       run: uv run --frozen pytest 
