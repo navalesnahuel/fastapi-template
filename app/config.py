@@ -15,6 +15,7 @@ class CustomBaseSettings(BaseSettings):
 
 
 class Config(CustomBaseSettings):
+
     DATABASE_URL: PostgresDsn
     DATABASE_POOL_SIZE: int = 16
     DATABASE_POOL_TTL: int = 60 * 20  # 20 minutes
@@ -33,8 +34,8 @@ class Config(CustomBaseSettings):
     # 8 days
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
 
-    FIRST_SUPERUSER: str = "test@test.com"
-    FIRST_SUPERUSER_PASSWORD: str = "testpassword"
+    FIRST_SUPERUSER: str
+    FIRST_SUPERUSER_PASSWORD: str
 
     APP_VERSION: str = "0.1"
 
@@ -44,13 +45,6 @@ class Config(CustomBaseSettings):
             raise ValueError("Sentry is not set")
 
         return self
-
-    @property
-    def secret_key(self):
-        # Override SECRET_KEY for testing environment
-        if self.ENVIRONMENT == Environment.TESTING:
-            return "testsecretkey"  # Simple secret for testing purposes
-        return self.SECRET_KEY
 
 
 settings = Config()  # type: ignore

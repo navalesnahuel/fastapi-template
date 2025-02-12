@@ -14,15 +14,13 @@ engine = create_engine(
 )
 
 
-def init_db(session: Session) -> None:
-    """Create the first superuser with credentials from env"""
-    user = session.exec(
-        select(User).where(User.email == settings.FIRST_SUPERUSER)
-    ).first()
+def init_db(session: Session, email: str, password: str) -> None:
+    """Create the first superuser"""
+    user = session.exec(select(User).where(User.email == email)).first()
     if not user:
         user_in = UserCreate(
-            email=settings.FIRST_SUPERUSER,
-            password=settings.FIRST_SUPERUSER_PASSWORD,
+            email=email,
+            password=password,
             is_superuser=True,
         )
         user = create_user(session=session, user_create=user_in)

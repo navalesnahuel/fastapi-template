@@ -9,11 +9,13 @@ services:
     volumes:
       - ./app/:/app/app
       - ./alembic:/app/alembic
-      - .env.dev:/app/.env
+    env_file:
+      - .env
     ports:
       - "8001:8000"
     depends_on:
       - db
+    restart: always
     entrypoint: ["entrypoints/uvicorn.sh"]
 
   db:
@@ -29,6 +31,16 @@ services:
       - app_db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
+  db-test:
+    container_name: db-test
+    image: library/postgres:16.3
+    environment: 
+      - POSTGRES_DB=test_db
+      - POSTGRES_USER=test_user
+      - POSTGRES_PASSWORD=test_password
+    ports:
+      - 5433:5432
 
   adminer:
     image: adminer

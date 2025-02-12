@@ -4,11 +4,10 @@ from enum import Enum
 class Environment(str, Enum):
     DEVELOPMENT = "DEVELOPMENT"
     PRODUCTION = "PRODUCTION"
-    TESTING = "TESTING"
 
     @property
     def is_debug(self):
-        return self in (self.DEVELOPMENT, self.TESTING)
+        return self in (self.DEVELOPMENT)
 
     @property
     def is_deployed(self) -> bool:

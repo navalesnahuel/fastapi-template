@@ -1,9 +1,6 @@
 default:
   just --list
 
-run *args:
-  uv run uvicorn app.main:app --reload {{args}}
-
 mm *args:
   uv run alembic revision --autogenerate -m "{{args}}"
 
@@ -30,3 +27,6 @@ build:
 
 ps:
   docker compose ps
+
+test:
+  uv run pytest

@@ -2,6 +2,7 @@ import logging
 
 from sqlmodel import Session
 
+from ..config import settings
 from ..database import engine, init_db
 
 logging.basicConfig(
@@ -16,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 def init() -> None:
     with Session(engine) as session:
-        init_db(session)
+        init_db(session, settings.FIRST_SUPERUSER, settings.FIRST_SUPERUSER_PASSWORD)
 
 
 def main() -> None:

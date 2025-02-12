@@ -1,0 +1,28 @@
+Create github secrets:
+
+FIRST_SUPERUSER= # Your Superuser Email
+FIRST_SUPERUSER_PASSWORD= # Your Superuser Password
+
+APP_VERSION= # Your APP version
+
+DATABASE_URL= # Your database URL
+
+CORS_HEADERS=["Content-Type", "Authorization"]
+CORS_ORIGINS=["https://frontend.example.com"]
+
+
+SENTRY_DSN= SENTRY_DSN CREDENTIALS
+
+LETSENCRYPT_EMAIL
+
+DOCKERHUB_TOKEN
+DOCKERHUB_USERNAME
+
+# For production on GCP VMs
+GCP_PROJECT_ID
+GCP_SA_KEY
+GCP_SSH_PRIVATE_KEY
+SSH_PRIVATE_KEY
+
+VM_INSTANCE
+ZONE

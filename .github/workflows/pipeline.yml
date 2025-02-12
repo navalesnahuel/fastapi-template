@@ -15,11 +15,11 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_USER: ${{ SECRETS.TESTDB_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.TESTDB_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.TESTDB_DB }}
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_pasword
+          POSTGRES_DB: test_db
         ports:
-          - 5432:5432
+          - 5433:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -39,17 +39,8 @@ jobs:
     - name: Ensure static directory exists
       run: mkdir -p static
 
-    - name: Migrate DB
-      run: uv run bash scripts/prestart.sh
-      env:
-        DATABASE_URL: ${{ secrets.DATABASE_TEST_URL }}
-        ENVIRONMENT: TESTING
-
     - name: Run Tests
-      run: uv run --frozen pytest # Tests on PRs
-      env:
-        DATABASE_URL: ${{ secrets.DATABASE_TEST_URL }}
-        ENVIRONMENT: TESTING
+      run: uv run --frozen pytest 
 
   lint:
     runs-on: ubuntu-20.04
@@ -100,66 +91,66 @@ jobs:
           -t ${{ secrets.DOCKERHUB_USERNAME }}/myapp:latest \
           --push .
 
-  deploy:
-    runs-on: ubuntu-20.04
-    environment: production
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - id: auth
-      name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v2
-      with:
-        credentials_json: ${{ secrets.GCP_SA_KEY }}
-
-    - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v2
-
-    - name: Configure SSH
-      run: |
-        # Create SSH directory
-        mkdir -p /home/runner/.ssh/
-        
-        # Generate SSH key pair
-        ssh-keygen -t rsa -f /home/runner/.ssh/google_compute_engine -N "" -C "github-actions"
-        
-        # Read public key content and add to GCP
-        echo "$(whoami):$(cat /home/runner/.ssh/google_compute_engine.pub)" | \
-        gcloud compute project-info add-metadata \
-          --metadata ssh-keys="$(cat -)"
-        
-        # Set correct permissions
-        chmod 600 /home/runner/.ssh/google_compute_engine
-        
-        # Wait a moment for key propagation
-        sleep 10
-        
-        # Add instance hostname to known hosts (fixed zone parameter)
-        gcloud compute ssh "${{ secrets.VM_INSTANCE}}" --zone="${{ secrets.ZONE }}" --command="echo"
-
-    - name: Deploy to VM
-      run: |
-        # Ensure the target directory exists on the VM
-        gcloud compute ssh --zone ${{ secrets.ZONE }} ${{ secrets.VM_INSTANCE }} --command="mkdir -p ~/app"
-        
-        # Copy files to the VM
-        gcloud compute scp --recurse --zone ${{ secrets.ZONE }} ./* ${{ secrets.VM_INSTANCE }}:~/app/
-        
-        # Create the .env file dynamically on the VM
-        gcloud compute ssh --zone ${{ secrets.ZONE }} ${{ secrets.VM_INSTANCE }} --command="
-          echo 'APP_VERSION=${{ secrets.APP_VERSION }}' > ~/app/.env && \
-          echo 'ENVIRONMENT=${{ secrets.ENVIRONMENT }}' >> ~/app/.env && \
-          echo 'DATABASE_URL=${{ secrets.DATABASE_URL }}' >> ~/app/.env && \
-          echo 'FIRST_SUPERUSER=${{ secrets.FIRST_SUPERUSER }}' >> ~/app/.env && \
-          echo 'FIRST_SUPERUSER_PASSWORD=${{ secrets.FIRST_SUPERUSER_PASSWORD }}' >> ~/app/.env && \
-          echo 'SENTRY_DSN=${{ secrets.SENTRY_DSN }}' >> ~/app/.env
-        "
-
-        # Execute deployment commands on the VM
-        gcloud compute ssh --zone ${{ secrets.ZONE }} ${{ secrets.VM_INSTANCE }} --command="
-          cd ~/app && \
-          export DOCKER_BUILDKIT=1 && \
-          sudo docker-compose -f docker-compose.prod.yml down && \
-          sudo docker-compose -f docker-compose.prod.yml up -d
-        "
+  # deploy:
+  #   needs: [build]
+  #   runs-on: ubuntu-20.04
+  #
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #
+  #   - id: auth
+  #     name: Authenticate to Google Cloud
+  #     uses: google-github-actions/auth@v2
+  #     with:
+  #       credentials_json: ${{ secrets.GCP_SA_KEY }}
+  #
+  #   - name: Set up Cloud SDK
+  #     uses: google-github-actions/setup-gcloud@v2
+  #
+  #   - name: Configure SSH
+  #     run: |
+  #       # Create SSH directory
+  #       mkdir -p /home/runner/.ssh/
+  #
+  #       # Generate SSH key pair
+  #       ssh-keygen -t rsa -f /home/runner/.ssh/google_compute_engine -N "" -C "github-actions"
+  #
+  #       # Read public key content and add to GCP
+  #       echo "$(whoami):$(cat /home/runner/.ssh/google_compute_engine.pub)" | \
+  #       gcloud compute project-info add-metadata \
+  #         --metadata ssh-keys="$(cat -)"
+  #
+  #       # Set correct permissions
+  #       chmod 600 /home/runner/.ssh/google_compute_engine
+  #
+  #       # Wait a moment for key propagation
+  #       sleep 10
+  #
+  #       # Add instance hostname to known hosts (fixed zone parameter)
+  #       gcloud compute ssh "${{ secrets.VM_INSTANCE}}" --zone="${{ secrets.ZONE }}" --command="echo"
+  #
+  #   - name: Deploy to VM
+  #     run: |
+  #       # Ensure the target directory exists on the VM
+  #       gcloud compute ssh --zone ${{ secrets.ZONE }} ${{ secrets.VM_INSTANCE }} --command="mkdir -p ~/app"
+  #
+  #       # Copy files to the VM
+  #       gcloud compute scp --recurse --zone ${{ secrets.ZONE }} ./* ${{ secrets.VM_INSTANCE }}:~/app/
+  #
+  #       # Create the .env file dynamically on the VM
+  #       gcloud compute ssh --zone ${{ secrets.ZONE }} ${{ secrets.VM_INSTANCE }} --command="
+  #         echo 'APP_VERSION=${{ secrets.APP_VERSION }}' >> ~/app/.env && \
+  #         echo 'ENVIRONMENT=${{ secrets.ENVIRONMENT }}' >> ~/app/.env && \
+  #         echo 'DATABASE_URL=${{ secrets.DATABASE_URL }}' >> ~/app/.env && \
+  #         echo 'FIRST_SUPERUSER=${{ secrets.FIRST_SUPERUSER }}' >> ~/app/.env && \
+  #         echo 'FIRST_SUPERUSER_PASSWORD=${{ secrets.FIRST_SUPERUSER_PASSWORD }}' >> ~/app/.env && \
+  #         echo 'SENTRY_DSN=${{ secrets.SENTRY_DSN }}' >> ~/app/.env
+  #       "
+  #
+  #       # Execute deployment commands on the VM
+  #       gcloud compute ssh --zone ${{ secrets.ZONE }} ${{ secrets.VM_INSTANCE }} --command="
+  #         cd ~/app && \
+  #         export DOCKER_BUILDKIT=1 && \
+  #         sudo docker-compose -f docker-compose.prod.yml down && \
+  #         sudo docker-compose -f docker-compose.prod.yml up -d
+  #       "
