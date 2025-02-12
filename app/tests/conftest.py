@@ -12,7 +12,6 @@ ENV_VARS = {
     "DATABASE_URL": "postgresql://test_user:test_password@localhost:5433/test_db",
     "FIRST_SUPERUSER": "test@test.com",
     "FIRST_SUPERUSER_PASSWORD": "testpassword",
-    "SENTRY_DSN": "",  # Mock an empty or fake value to bypass the validation
 }
 
 patch.dict(os.environ, ENV_VARS).start()

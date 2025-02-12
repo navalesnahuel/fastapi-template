@@ -10,7 +10,6 @@ DATABASE_URL= # Your database URL
 CORS_HEADERS=["Content-Type", "Authorization"]
 CORS_ORIGINS=["https://frontend.example.com"]
 
-
 SENTRY_DSN= SENTRY_DSN CREDENTIALS
 
 LETSENCRYPT_EMAIL
