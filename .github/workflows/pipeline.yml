@@ -39,16 +39,16 @@ jobs:
     - name: Ensure static directory exists
       run: mkdir -p static
 
-    - name: Set environment variables & run tests
+    - name: Set environment variables
       run: |
-        mkdir -p ~/app 
-        echo 'APP_VERSION=${{ secrets.APP_VERSION }}' >> ~/app/.env
-        echo 'DATABASE_URL=${{ secrets.DATABASE_URL }}' >> ~/app/.env
-        echo 'FIRST_SUPERUSER=${{ secrets.FIRST_SUPERUSER }}' >> ~/app/.env
-        echo 'FIRST_SUPERUSER_PASSWORD=${{ secrets.FIRST_SUPERUSER_PASSWORD }}' >> ~/app/.env
-        echo 'SENTRY_DSN=${{ secrets.SENTRY_DSN }}' >> ~/app/.env
-        cd ~/app
-        uv run --frozen pytest 
+        echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+        echo "FIRST_SUPERUSER=${{ secrets.FIRST_SUPERUSER }}" >> $GITHUB_ENV
+        echo "FIRST_SUPERUSER_PASSWORD=${{ secrets.FIRST_SUPERUSER_PASSWORD }}" >> $GITHUB_ENV
+        echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> $GITHUB_ENV
+        echo "APP_VERSION=${{ secrets.APP_VERSION }}" >> $GITHUB_ENV
+
+    - name: Run Tests
+      run: uv run --frozen pytest 
 
 
   lint:
