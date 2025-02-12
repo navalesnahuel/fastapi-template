@@ -1,5 +1,4 @@
 ## FastAPI Project Template
----
 A modern, production-ready template for building APIs with FastAPI, featuring OAuth2 authentication, SQLModel ORM, and comprehensive testing.
 
 ## Features
@@ -67,6 +66,8 @@ This project follows a modular approach, with separate directories for different
 
 2. Set up the .env file:
 
+<div align="center">
+
 | Variable                   | Description                                      | Required |
 |----------------------------|--------------------------------------------------|----------|
 | `APP_VERSION`              | Version of the application                      | Yes      |
@@ -76,6 +77,8 @@ This project follows a modular approach, with separate directories for different
 | `CORS_ORIGINS`             | Allowed origins for CORS requests               | No       |
 | `FIRST_SUPERUSER`          | Email for the first superuser                   | Yes      |
 | `FIRST_SUPERUSER_PASSWORD` | Password for the first superuser                | Yes      |
+
+</div>
 
 3. Run the development script
    ```just dev```
