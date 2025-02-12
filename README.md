@@ -57,12 +57,13 @@ This project follows a modular approach, with separate directories for different
 
 ---
 
-## Installation
+## Fastest Setup
 
 1. Clone the repository:
    ```bash
    git clone https://github.com/your-repo/fastapi-template.git
-   cd fastapi-template```
+   cd fastapi-template
+   ```
 
 2. Set up the .env file:
 
@@ -84,3 +85,14 @@ This project follows a modular approach, with separate directories for different
    ```just dev```
 
 ---
+
+## Development
+Backend docs: [Development.md](./development.md).
+
+## Deployment 
+Backend docs: [Development.md](./deployment.md).
+
+---
+
+## License
+The Full Stack FastAPI Template is licensed under the terms of the MIT license.
