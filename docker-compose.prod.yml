@@ -2,10 +2,9 @@ version: '3.8'
 services:
   fastapi:
     image: ${DOCKERHUB_USERNAME}/backend-api:latest
-    container_name: fastapi
     environment:
-      - VIRTUAL_HOST=${HOST}
-      - LETSENCRYPT_HOST=${HOST}
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+      - LETSENCRYPT_HOST=${VIRTUAL_HOST}
       - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
     env_file:
        - .env
@@ -21,7 +20,7 @@ services:
       start_period: 10s
     deploy:
       mode: replicated
-      replicas: 1 
+      replicas: 3
       update_config:
         parallelism: 1
         delay: 10s
@@ -54,7 +53,7 @@ services:
       - vhost.d:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
     environment:
-      - DEFAULT_EMAIL=navalesnahuel@gmail.com
+      - DEFAULT_EMAIL=${LETSENCRYPT_EMAIL}
       - NGINX_PROXY_CONTAINER=nginx-proxy  
     networks:
       - default

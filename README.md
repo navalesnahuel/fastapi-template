@@ -57,17 +57,16 @@ This project follows a modular approach, with separate directories for different
 
 ---
 
-
 ## Setup Guide
 
-1. Clone the Repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/your-repo/fastapi-template.git
 cd fastapi-template
 ```
 
-2. Set Up the `.env` File
+## 2. Set Up the `.env` File
 
 <div align="center">
 
@@ -80,16 +79,16 @@ cd fastapi-template
 | `CORS_ORIGINS`            | Allowed origins for CORS requests         | No           | No              |
 | `FIRST_SUPERUSER`         | Email for the first superuser            | Yes          | Yes             |
 | `FIRST_SUPERUSER_PASSWORD`| Password for the first superuser         | Yes          | Yes |
-| `DOCKERHUB_USERNAME`      | Docker Hub username (for deployment)      | No           | Yes (Using CI/CD)             |
+| `DOCKERHUB_USERNAME`      | Docker Hub username (for deployment)      | No           | Yes             |
 | `DOCKERHUB_TOKEN`         | Docker Hub authentication token          | No           | Yes             |
-| `HOST`                    | Primary domain for the application       | No           | Yes             |
+| `VIRTUAL_HOST`                    | Primary domain for the application       | No           | Yes             |
 | `LETSENCRYPT_EMAIL`       | Email for SSL certificates              | No           | Yes             |
 
 </div>
 
-3. Run the Application
+### 3. Run the Application
 
-### Development Guide
+#### Development Guide
 
 - Run the application in development mode with `just dev`.
 - Use `pytest` to execute test cases:
@@ -102,14 +101,13 @@ cd fastapi-template
   ```
 - Apply Alembic migrations:
   ```bash
-  uv run alembic upgrade head
+  uv run alembic upgrade head 
   ```
-
 ---
 
-### Deployment Guide
+#### Deployment Guide
 
-#### Prerequisites
+##### Prerequisites
 
 Before deploying the application, ensure you have:
 
@@ -117,16 +115,25 @@ Before deploying the application, ensure you have:
 - Docker and Docker Compose installed on your server
 - Access to your server with necessary deployment permissions
 
-1. Build Docker Image
+
+##### 1. Configure Environment
+
+Set up your environment variables:
+
+- Create the `.env` file in your project root (If using github actions, set them at secrets)
+- Verify all required variables are present
+- Update values according to your deployment environment
+
+##### 2. Build Docker Image
 
 Build your application using Docker Compose:
 
 ```bash
-docker build --target production -t ${DOCKERHUB_USERNAME}/myapp:latest .
+docker build --target production -t ${DOCKERHUB_USERNAME}/backend-api:latest .
 
 ```
 
-2. Push to Registry
+##### 3. Push to Registry
 
 Push the built image to your Docker registry:
 
@@ -134,15 +141,7 @@ Push the built image to your Docker registry:
 docker push ${DOCKERHUB_USERNAME}/backend-api:latest
 ```
 
-3. Configure Environment
-
-Set up your environment variables:
-
-    Locate the `.env` file in your project root
-    Verify all required variables are present
-    Update values according to your deployment environment
-
-4. Deploy Application
+##### 4. Deploy Application
 
 Deploy using the production configuration:
 
@@ -150,21 +149,7 @@ Deploy using the production configuration:
 just prod
 ```
 
-#### Maintenance and Scaling
-
-##### Updating the Application
-
-To update your deployment with the latest changes:
-
-```bash
-# Pull the latest image
-docker-compose -f docker-compose.prod.yml pull
-
-# Restart containers with new image
-just prod
-```
-
-##### Scaling Services
+##### 5. Scaling Services
 
 To scale your application services:
 
@@ -180,7 +165,7 @@ services:
 2. Apply the scaling changes:
 
 ```bash
-docker-compose -f docker-compose.prod.yml up -d --scale fastapi=2
+just prod
 ```
 
 This example scales the FastAPI service to 2 replicas.

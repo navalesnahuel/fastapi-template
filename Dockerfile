@@ -18,8 +18,6 @@ ENV PYTHONUNBUFFERED=1 \
 
 RUN mkdir -p /app/static/products
 
-RUN apt-get update && apt-get install -y curl
-
 # --- Development ---
 FROM base AS development
 
