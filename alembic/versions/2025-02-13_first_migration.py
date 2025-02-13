@@ -1,8 +1,8 @@
-"""First migration
+"""first migration
 
-Revision ID: 915213bc598a
+Revision ID: dbc3afe1a4ef
 Revises:
-Create Date: 2025-01-21 02:07:31.722307
+Create Date: 2025-02-13 18:23:45.987224
 
 """
 
@@ -14,7 +14,7 @@ import sqlmodel
 
 
 # revision identifiers, used by Alembic.
-revision: str = "915213bc598a"
+revision: str = "dbc3afe1a4ef"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
