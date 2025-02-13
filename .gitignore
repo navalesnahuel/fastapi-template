@@ -7,15 +7,8 @@ wheels/
 *.egg-info
 certs/
 backups/
-static/
 .pytest_cache/
 .ruff_cache/
-
-
-# Envs
-.env
-.env.dev
-
 
 # Virtual environments
 .venv

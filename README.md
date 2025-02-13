@@ -62,7 +62,7 @@ This project follows a modular approach, with separate directories for different
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-repo/fastapi-template.git
+git clone https://github.com/navalesnahuel/fastapi-template.git
 cd fastapi-template
 ```
 

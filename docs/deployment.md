@@ -4,62 +4,48 @@
 
 Before deploying the application, ensure you have:
 
-- A registered domain pointing to your server
-- Docker and Docker Compose installed on your server
-- Access to your server with necessary deployment permissions
+*   A registered domain name pointing to your server's IP address.
+*   Docker and Docker Compose installed on your server.
+*   SSH access to your server with the necessary permissions for deployment.
 
+### 1. Environment Configuration
 
-### 1. Configure Environment
+1.  Create a `.env` file in your project's root directory *on your server*.
+2.  Populate the `.env` file with the required environment variables. See the main `README.md` for a list of these variables and their descriptions. If using GitHub Actions for deployment, set these variables as secrets in your repository settings instead.
+3.  Ensure all required variables are present and their values are correct for your production environment.
 
-Set up your environment variables:
+### 2. Building and Pushing the Docker Image
 
-- Create the `.env` file in your project root (If using github actions, set them at secrets)
-- Verify all required variables are present
-- Update values according to your deployment environment
+    ```bash
+    DOCKERHUB_USERNAME=$(grep -oP '(?<=^DOCKERHUB_USERNAME=).*' .env) && \
+    docker build --target production -t ${DOCKERHUB_USERNAME}/backend-api:latest . && \
+    docker push ${DOCKERHUB_USERNAME}/backend-api:latest
+    ```
 
-### 2. Build Docker Image
-
-Build your application using Docker Compose:
-
-```bash
-docker build --target production -t ${DOCKERHUB_USERNAME}/backend-api:latest .
-
-```
-
-### 3. Push to Registry
-
-Push the built image to your Docker registry:
-
-```bash
-docker push ${DOCKERHUB_USERNAME}/backend-api:latest
-```
-
-### 4. Deploy Application
+### 3. Deploying the Application
 
 Deploy using the production configuration:
 
-```bash
-just prod
-```
+    ```bash
+    just prod
+    ```
 
-### 5. Scaling Services
+### 4. Scaling the Application
 
-To scale your application services:
+To scale your application, adjust the number of replicas in your `docker-compose.prod.yml` file and then redeploy:
 
-- Modify the `docker-compose.prod.yml` file to adjust replica count:
+1.  Edit `docker-compose.prod.yml` *on your server* and modify the `replicas` value within the `fastapi` service definition:
 
-```yaml
-services:
-  fastapi:
-    deploy:
-      replicas: 2
-```
+    ```yaml
+    services:
+      fastapi:
+        deploy:
+          replicas: 2  # Example: Scale to 2 replicas
+    ```
 
-- Apply the scaling changes:
+2.  Redeploy the application to apply the scaling changes:
+    ```bash
+    just prod
+    ```
 
-```bash
-just prod
-```
-
-This example scales the FastAPI service to 2 replicas.
-
+This example scales the FastAPI service to 2 replicas. Adjust the `replicas` value as needed.  Remember to redeploy after making changes to the `docker-compose.prod.yml` file.
