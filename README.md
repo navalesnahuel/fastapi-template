@@ -82,8 +82,7 @@ cd fastapi-template
 | `FIRST_SUPERUSER_PASSWORD`| Password for the first superuser         | Yes          | Yes |
 | `DOCKERHUB_USERNAME`      | Docker Hub username (for deployment)      | No           | Yes (Using CI/CD)             |
 | `DOCKERHUB_TOKEN`         | Docker Hub authentication token          | No           | Yes             |
-| `VIRTUAL_HOST`                    | Primary domain for the application       | No           | Yes             |
-| `LETSENCRYPT_HOST`        | Domain for SSL certificate generation         | No           | Yes             |
+| `HOST`                    | Primary domain for the application       | No           | Yes             |
 | `LETSENCRYPT_EMAIL`       | Email for SSL certificates              | No           | Yes             |
 
 </div>

@@ -26,6 +26,8 @@ FROM base AS development
 COPY ./pyproject.toml ./uv.lock ./alembic.ini ./logging.ini /app/
 COPY ./entrypoints/uvicorn.sh /app/entrypoints/uvicorn.sh
 
+ENTRYPOINT ["entrypoints/uvicorn.sh"]
+
 # --- Production ---
 FROM base AS production
 
@@ -51,5 +53,7 @@ RUN groupadd --gid 1000 appgroup && \
     chown -R appuser:appgroup /logs
 
 USER appuser
+
+ENTRYPOINT ["entrypoints/gunicorn.sh"]
 
 
