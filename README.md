@@ -1,4 +1,4 @@
-## FastAPI Project Template
+# FastAPI Project Template
 A modern, production-ready template for building APIs with FastAPI, featuring OAuth2 authentication, SQLModel ORM, and comprehensive testing.
 
 ## Features
@@ -66,7 +66,7 @@ git clone https://github.com/your-repo/fastapi-template.git
 cd fastapi-template
 ```
 
-## 2. Set Up the `.env` File
+### 2. Set Up the `.env` File
 
 <div align="center">
 
@@ -86,142 +86,21 @@ cd fastapi-template
 
 </div>
 
-### 3. Run the Application
+### 3. Running the Application
+This project uses separate documentation files for development, deployment, and CI/CD.
 
-#### Development Guide
-
-- Run the application in development mode with `just dev`.
-- Use `pytest` to execute test cases:
-  ```bash
-  uv run pytest
-  ```
-- Format and lint the code with Ruff:
-  ```bash
-  uv run ruff check .
-  ```
-- Apply Alembic migrations:
-  ```bash
-  uv run alembic upgrade head 
-  ```
----
-
-#### Deployment Guide
-
-##### Prerequisites
-
-Before deploying the application, ensure you have:
-
-- A registered domain pointing to your server
-- Docker and Docker Compose installed on your server
-- Access to your server with necessary deployment permissions
-
-
-##### 1. Configure Environment
-
-Set up your environment variables:
-
-- Create the `.env` file in your project root (If using github actions, set them at secrets)
-- Verify all required variables are present
-- Update values according to your deployment environment
-
-##### 2. Build Docker Image
-
-Build your application using Docker Compose:
-
-```bash
-docker build --target production -t ${DOCKERHUB_USERNAME}/backend-api:latest .
-
-```
-
-##### 3. Push to Registry
-
-Push the built image to your Docker registry:
-
-```bash
-docker push ${DOCKERHUB_USERNAME}/backend-api:latest
-```
-
-##### 4. Deploy Application
-
-Deploy using the production configuration:
-
-```bash
-just prod
-```
-
-##### 5. Scaling Services
-
-To scale your application services:
-
-1. Modify the `docker-compose.prod.yml` file to adjust replica count:
-
-```yaml
-services:
-  fastapi:
-    deploy:
-      replicas: 2
-```
-
-2. Apply the scaling changes:
-
-```bash
-just prod
-```
-
-This example scales the FastAPI service to 2 replicas.
+- **Development**: See [Development Instructions](./docs/development.md).  
+- **Deployment**: See [Deployment Instructions](./docs/deployment.md).
 
 ---
 
-## CI/CD Pipeline Setup Guide
-
-### Overview
-
-The CI/CD pipeline currently handles:
-1. Testing
-2. Linting
-3. Building and pushing Docker images
-
-The deployment step has been removed from the default pipeline since deployment targets vary by user. This guide will help you configure your own deployment step.
-
-### Current Pipeline Structure
-
-```yaml
-jobs:
-  test:    # Runs tests with PostgreSQL service
-  lint:    # Checks code quality
-  build:   # Builds and pushes Docker image
-```
-
-### Adding Your Deployment Step
-
-To add deployment to your infrastructure, create a new job after the build step. Here's a template you can modify:
-
-```yaml
-  deploy:
-    needs: [build]
-    runs-on: ubuntu-20.04
-    if: github.event_name == 'push'
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.2.2
-
-      # Add your deployment steps here
-```
-
-### Testing Your Deployment
-
-1. Add your deployment configuration to `.github/workflows/ci-cd.yml`
-2. Set up required secrets in your GitHub repository
-3. Push to main branch to trigger the pipeline
-4. Monitor the Actions tab for deployment status
+#### CI/CD Pipeline Setup 
+For CI/CD setup instructions, see [CI/CD Instructions](./docs/cicd.md)
 
 --- 
 
 ## License
 The Full Stack FastAPI Template is licensed under the terms of the MIT license.
-
----
 
 ## Acknowledgements
 This repository incorporates code and ideas from the following open-source projects:
