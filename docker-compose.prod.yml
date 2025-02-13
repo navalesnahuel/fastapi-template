@@ -1,15 +1,12 @@
 version: '3.8'
 services:
   fastapi:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: production
+    image: ${DOCKERHUB_USERNAME}/backend-api:latest
     container_name: fastapi
     environment:
-      - VIRTUAL_HOST=nahuelapi.duckdns.org
-      - LETSENCRYPT_HOST=nahuelapi.duckdns.org
-      - LETSENCRYPT_EMAIL=navalesnahuel@gmail.com
+      - VIRTUAL_HOST=${HOST}
+      - LETSENCRYPT_HOST=${HOST}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
     env_file:
        - .env
     expose:
