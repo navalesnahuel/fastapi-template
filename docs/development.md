@@ -8,21 +8,21 @@ Set up your development environment variables in a `.env` file in the project ro
 
 Run the application in development mode:
 
-    ```bash
+    ```
     just dev
     ```
 
 ### 3. Running Tests
 Execute test cases using `pytest`:
     
-    ```bash
+    ```
     uv run pytest
     ```
 
 ### 4. Code Formatting and Linting
 Format and lint the code using `Ruff`:
 
-    ``` bash
+    ```
     uv run ruff check .
     ```
 
@@ -30,13 +30,13 @@ Format and lint the code using `Ruff`:
 ### 5. Database Migrations
 Apply Alembic migrations:
 
-    ```bash
+    ```
     just migrate
     ```
 
 ### Check every justfile command
 Commands to handle migrations and docker containers:
 
-    ```bash
+    ```
     just -l
     ```

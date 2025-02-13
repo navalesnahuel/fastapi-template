@@ -16,7 +16,7 @@ Before deploying the application, ensure you have:
 
 ### 2. Building and Pushing the Docker Image
 
-    ```bash
+    ```
     DOCKERHUB_USERNAME=$(grep -oP '(?<=^DOCKERHUB_USERNAME=).*' .env) && \
     docker build --target production -t ${DOCKERHUB_USERNAME}/backend-api:latest . && \
     docker push ${DOCKERHUB_USERNAME}/backend-api:latest
@@ -26,7 +26,7 @@ Before deploying the application, ensure you have:
 
 Deploy using the production configuration:
 
-    ```bash
+    ```
     just prod
     ```
 
@@ -44,7 +44,7 @@ To scale your application, adjust the number of replicas in your `docker-compose
     ```
 
 2.  Redeploy the application to apply the scaling changes:
-    ```bash
+    ```
     just prod
     ```
 
