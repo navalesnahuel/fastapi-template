@@ -34,7 +34,7 @@ Apply Alembic migrations:
     just migrate
     ```
 
-### Check every justfile commnand
+### Check every justfile command
 Commands to handle migrations and docker containers:
 
     ```bash
